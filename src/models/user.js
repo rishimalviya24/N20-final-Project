@@ -1,5 +1,7 @@
 import mongoose, { mongo } from 'mongoose';
 import config from '../config/config.js'
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema( {
     username:{
@@ -40,7 +42,7 @@ userSchema.statics.hashPassword = async function(password){
     return bcrypt.hash(password, salt);
 }
 
-userSchema.methods.comaparePassword = async function(password){
+userSchema.methods.comparePassword = async function(password){
     if(!password){
         throw new Error("Password is required");
     }
@@ -67,10 +69,10 @@ userSchema.methods.generateToken = function(){
 }
 
 userSchema.statics.verifyToken = function(token) {
+
     if(!token){
         throw new Error("Token is required");
     }
-
 }
 
 const userModel = mongoose.model("user",userSchema);
