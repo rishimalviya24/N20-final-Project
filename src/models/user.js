@@ -46,7 +46,6 @@ userSchema.methods.comparePassword = async function(password){
     if(!password){
         throw new Error("Password is required");
     }
-
     if(!this.password){
         throw new Error("Password is required");
     }
@@ -56,7 +55,7 @@ userSchema.methods.comparePassword = async function(password){
 userSchema.methods.generateToken = function(){
     const token =  jwt.sign(
         {
-            id:this._id,
+            _id: this._id,
             username:this.username,
             email:this.email,
         }
@@ -73,6 +72,8 @@ userSchema.statics.verifyToken = function(token) {
     if(!token){
         throw new Error("Token is required");
     }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    return decoded;
 }
 
 const userModel = mongoose.model("user",userSchema);
